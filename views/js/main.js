@@ -401,6 +401,9 @@ var pizzaElementGenerator = function(i) {
 // resizePizzas(size) is called when the slider in the "Our Pizzas" section of the website moves.
 var resizePizzas = function(size) {
   window.performance.mark("mark_start_resize");   // User Timing API function
+  var windowwidth = document.querySelector("#randomPizzas").offsetWidth; //determines pizza container width for all pizzas
+  var oldwidth = document.querySelector(".randomPizzaContainer").offsetWidth; //determines current size of individual pizza container
+  var oldsize = oldwidth / windowwidth;
 
   // Changes the value for the size of the pizza above the slider
   function changeSliderLabel(size) {
@@ -422,10 +425,8 @@ var resizePizzas = function(size) {
   changeSliderLabel(size);
 
   // Returns the size difference to change a pizza element from one size to another. Called by changePizzaSlices(size).
-  function determineDx (elem, size) {
-    var oldwidth = elem.offsetWidth; // FSL READ
-    var windowwidth = document.querySelector("#randomPizzas").offsetWidth; //FSL READ
-    var oldsize = oldwidth / windowwidth; //FSL READ
+  function determineDx (size) {
+     //FSL READ
     // Changes the slider value to a percent width
     function sizeSwitcher (size) {
       switch(size) {
@@ -448,9 +449,11 @@ var resizePizzas = function(size) {
 
   // Iterates through pizza elements on the page and changes their widths
   function changePizzaSizes(size) {
-      var dx = determineDx(document.querySelector(".randomPizzaContainer"), size);
-      var newwidth = (document.querySelector(".randomPizzaContainer").offsetWidth + dx) + 'px';
+      var dx = determineDx(size);
+      var newwidth = (oldwidth + dx) + 'px';
     for (var i = 0; i < document.querySelectorAll(".randomPizzaContainer").length; i++) {
+
+       //FSL READ
       document.querySelectorAll(".randomPizzaContainer")[i].style.width = newwidth;
     }
   }
