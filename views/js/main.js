@@ -404,7 +404,7 @@ var resizePizzas = function(size) {
   var windowwidth = document.querySelector("#randomPizzas").offsetWidth; //determines pizza container width for all pizzas
   var oldwidth = document.querySelector(".randomPizzaContainer").offsetWidth; //determines current size of individual pizza container
   var oldsize = oldwidth / windowwidth;
-
+  //console.log('windowwidth ' + windowwidth + ' ; pizzawidth ' + oldwidth);
   // Changes the value for the size of the pizza above the slider
   function changeSliderLabel(size) {
     switch(size) {
@@ -442,7 +442,9 @@ var resizePizzas = function(size) {
     }
 
     var newsize = sizeSwitcher(size);
+    //console.log(newsize + ' newsize');
     var dx = (newsize - oldsize) * windowwidth;
+    //console.log('dx ' + dx);
 
     return dx;
   }
@@ -497,15 +499,15 @@ function logAverageFrame(times) {   // times is the array of User Timing measure
 
 // The following code for sliding background pizzas was pulled from Ilya's demo found at:
 // https://www.igvita.com/slides/2012/devtools-tips-and-tricks/jank-demo.html
-
+//!!!!! thanks for the tip on above line! hahaha :-)
 // Moves the sliding background pizzas based on scroll position
 function updatePositions() {
   frame++;
   window.performance.mark("mark_start_frame");
-
+  var topScroll = document.body.scrollTop; //thanks to Ilya's demo page cache scroll top
   var items = document.querySelectorAll('.mover');
   for (var i = 0; i < items.length; i++) {
-    var phase = Math.sin((document.body.scrollTop / 1250) + (i % 5));
+    var phase = Math.sin((topScroll / 1250) + (i % 5));
     items[i].style.left = items[i].basicLeft + 100 * phase + 'px';
   }
 
@@ -519,22 +521,26 @@ function updatePositions() {
   }
 }
 
+function vertScroll() {
+  requestAnimationFrame(updatePositions);
+}
+
 // runs updatePositions on scroll
-window.addEventListener('scroll', updatePositions);
+window.addEventListener('scroll', vertScroll);
 
 // Generates the sliding pizzas when the page loads.
 document.addEventListener('DOMContentLoaded', function() {
   var cols = 8;
   var s = 256;
+  var src = "images/pizza.png";
   for (var i = 0; i < 200; i++) {
     var elem = document.createElement('img');
     elem.className = 'mover';
-    elem.src = "images/pizza.png";
-    elem.style.height = "100px";
-    elem.style.width = "73.333px";
+    elem.src = src;
     elem.basicLeft = (i % cols) * s;
     elem.style.top = (Math.floor(i / cols) * s) + 'px';
     document.querySelector("#movingPizzas1").appendChild(elem);
   }
-  updatePositions();
+  requestAnimationFrame(updatePositions);
+  //updatePositions();
 });
