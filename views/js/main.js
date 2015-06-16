@@ -426,7 +426,6 @@ var resizePizzas = function(size) {
 
   // Returns the size difference to change a pizza element from one size to another. Called by changePizzaSlices(size).
   function determineDx (size) {
-     //FSL READ
     // Changes the slider value to a percent width
     function sizeSwitcher (size) {
       switch(size) {
@@ -452,7 +451,7 @@ var resizePizzas = function(size) {
       var newwidth = (oldwidth + dx) + 'px';
       //move dom inquiry outside of for loop to increase performance
       var pizzas = document.getElementsByClassName('randomPizzaContainer');
-      console.log('after var');
+      //console.log('after var');
     for (var i = 0; i < pizzas.length; i++) {
        //removed forced syncronous layout READ
       pizzas[i].style.width = newwidth;
@@ -504,12 +503,13 @@ function logAverageFrame(times) {   // times is the array of User Timing measure
 function updatePositions() {
   frame++;
   window.performance.mark("mark_start_frame");
-  var topScroll = document.body.scrollTop; //thanks to Ilya's demo page cache scroll top
+  //move DOM query outside of for loop for performance increase
   var items = document.getElementsByClassName('mover');
   //move scrollTop math and phase variable creation outside of loop
-  var phase = (topScroll/1250);
+  var topScroll = (document.body.scrollTop / 1250); //thanks to Ilya's demo page cache scroll top
+  var phase;
   for (var i = 0; i < items.length; i++) {
-    phase = Math.sin(phase + (i % 5));
+    phase = Math.sin((topScroll) + (i % 5));
     items[i].style.left = items[i].basicLeft + 100 * phase + 'px';
   }
 
@@ -523,22 +523,19 @@ function updatePositions() {
   }
 }
 
-function vertScroll() {
-  requestAnimationFrame(updatePositions);
-}
-
 // runs updatePositions on scroll
-window.addEventListener('scroll', vertScroll);
+window.addEventListener('scroll', updatePositions);
 
 // Generates the sliding pizzas when the page loads.
 document.addEventListener('DOMContentLoaded', function() {
-  var cols = 7; //reduced column to 7 because I could never see 8 at a time on the page
+  var cols = 8; //reduced column to 7 because I could never see 8 at a time on the page
   var s = 256;
   var src = "images/pizza.png";
-  // reduced number of pizzas to 35; 5 rows of 7
+  var elem;
+  // reduced number of pizzas to 40; 5 rows of 8
   // this seems to cover all screen sizes or most screen sizes
-  for (var i = 0; i < 35; i++) {
-    var elem = document.createElement('img');
+  for (var i = 0; i < 40; i++) {
+    elem = document.createElement('img');
     elem.className = 'mover';
     elem.src = src;
     elem.style.height = "100px";
@@ -547,6 +544,6 @@ document.addEventListener('DOMContentLoaded', function() {
     elem.style.top = (Math.floor(i / cols) * s) + 'px';
     document.querySelector("#movingPizzas1").appendChild(elem);
   }
-  requestAnimationFrame(updatePositions);
-  //updatePositions();
+  //requestAnimationFrame(updatePositions);
+  updatePositions();
 });
