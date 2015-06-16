@@ -401,8 +401,8 @@ var pizzaElementGenerator = function(i) {
 // resizePizzas(size) is called when the slider in the "Our Pizzas" section of the website moves.
 var resizePizzas = function(size) {
   window.performance.mark("mark_start_resize");   // User Timing API function
-  var windowwidth = document.querySelector("#randomPizzas").offsetWidth; //determines pizza container width for all pizzas
-  var oldwidth = document.querySelector(".randomPizzaContainer").offsetWidth; //determines current size of individual pizza container
+  var windowwidth = document.getElementById('randomPizzas').offsetWidth; //determines pizza container width for all pizzas
+  var oldwidth = document.querySelector('.randomPizzaContainer').offsetWidth; //determines current size of individual pizza container
   var oldsize = oldwidth / windowwidth;
   //console.log('windowwidth ' + windowwidth + ' ; pizzawidth ' + oldwidth);
   // Changes the value for the size of the pizza above the slider
